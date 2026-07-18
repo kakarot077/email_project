@@ -21,13 +21,27 @@ to measure the real-world privacy-utility tradeoff on high-dimensional text data
 
 ## Key findings
 
-- Best non-DP model: **~98% accuracy**, near-perfect phishing recall.
-- Traditional DP methods (DP LogReg/NaiveBayes/RF) **fail** on this high-dimensional
-  data — accuracy collapses toward random guessing.
-- **DP-SGD with neural nets (Opacus)** is the only DP approach that stays usable:
-  ~93–95% at ε=10, ~85–90% at ε=1.
-- Privacy cost is roughly **3–13% accuracy**, scaling with how strict ε is.
-- **DP-ANN at ε=5.0** offers the best privacy-utility tradeoff for this task.
+1. Best non-DP model achieves **98.03% accuracy**, with near-perfect phishing
+   recall (1.00).
+2. Traditional DP methods (DP LogReg, DP NaiveBayes, DP RandomForest) **fail** on
+   high-dimensional email data — accuracy drops to ~50% (random guessing).
+3. **DP-SGD with neural networks (Opacus)** is the only viable approach for DP
+   email classification:
+   - ~93–95% accuracy at ε=10.0
+   - ~85–90% accuracy at ε=1.0
+4. Privacy costs ~3–13% accuracy depending on ε:
+
+   | ε | Accuracy drop | Privacy level |
+   |---|---|---|
+   | 10 | ~3% | weak privacy, high utility |
+   | 5 | ~5% | moderate privacy |
+   | 1 | ~10% | strong privacy |
+
+5. Dual-layer DP underperforms single-layer DP, because the privacy budget must
+   be split across layers.
+
+**Conclusion:** DP-ANN with **ε=5.0** offers the best privacy-utility tradeoff —
+~91–94% accuracy with meaningful privacy protection for email data.
 
 ## Setup
 
