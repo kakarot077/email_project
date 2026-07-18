@@ -11,7 +11,7 @@ Original file is located at
 # COMPLETE PIPELINE — SINGLE CELL
 # ============================================================
 
-!pip install -q xgboost diffprivlib opacus
+# Install dependencies first: pip install -r requirements.txt
 
 import pandas as pd
 import numpy as np
@@ -51,7 +51,7 @@ CONFIG = {
     'tfidf_min_df': 3, 'tfidf_max_df': 0.95, 'select_k': 3000,
     'et_n_estimators': 500, 'rf_n_estimators': 500, 'rf_max_depth': 25,
     'xgb_n_estimators': 300, 'xgb_max_depth': 8, 'xgb_lr': 0.05,
-    'xgb_subsample': 0.8, 'xgb_colsample': 0.8,
+    'xgb_subsample': 0.8, 'xgb_colsample': 0.8, 'cv_folds': 5,
 }
 label_names = {0: 'Ham', 1: 'Spam', 2: 'Phishing'}
 print("✅ Ready\n")
@@ -63,12 +63,12 @@ print("=" * 70)
 print("STEP 1: LOAD DATA")
 print("=" * 70)
 
-from google.colab import drive
-drive.mount('/content/drive', force_remount=False)
-
-BASE_DIR = '/content/drive/MyDrive/email-classifier'
-filepath = os.path.join(BASE_DIR, 'data', 'processed_data', 'final_dataset.csv')
-assert os.path.exists(filepath), f"Not found: {filepath}"
+BASE_DIR = os.environ.get('EMAIL_CLASSIFIER_DATA_DIR', './data')
+filepath = os.path.join(BASE_DIR, 'processed_data', 'final_dataset.csv')
+assert os.path.exists(filepath), (
+    f"Not found: {filepath}. Place your dataset there, or set the "
+    f"EMAIL_CLASSIFIER_DATA_DIR environment variable to its location."
+)
 
 df = pd.read_csv(filepath)
 df['subject'] = df['subject'].fillna('').astype(str)
